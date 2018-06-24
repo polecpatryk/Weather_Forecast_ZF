@@ -1,0 +1,50 @@
+<?php
+$title = 'Sprawdź pogodę';
+$this->headTitle($title);
+?>
+
+<h1><?= $this->escapeHtml($title) ?></h1>
+
+<?php
+$weather = $form->get('city');
+$weather->setAttribute('class', 'form-control');
+$weather->setAttribute('placeholder', 'Wpisz nazwę miasta');
+
+$submit = $form->get('submit');
+$submit->setAttribute('class', 'btn btn-primary');
+
+$form->setAttribute('action', $this->url('weather', ['action' => 'search']));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+?>
+
+<div class="form-group">
+    <?= $this->formElement($weather) ?>
+    <?= $this->formElementErrors()->render($weather, ['class' => 'help-block']) ?>
+</div>
+
+<?php
+echo $this->formSubmit($submit);
+echo $this->form()->closeTag();
+
+
+$title = 'Ostatnio wyszukiwana prognoza pogody';
+?>
+<h2><?= $this->escapeHtml($title) ?></h2>
+
+
+<table class="table">
+<tr>
+    <th>Miasto</th>
+    <th>Zakres</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($searchs as $weather) : ?>
+    <tr>
+        <td><?= $this->escapeHtml($weather->city) ?></td>
+        <td><?= $this->escapeHtml($weather->from_date) ?></td>
+        <td><?= $this->escapeHtml($weather->to_date) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>

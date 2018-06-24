@@ -1,0 +1,89 @@
+<?php
+$title = 'Sprawdź pogodę';
+$this->headTitle($title);
+?>
+
+<h1><?= $this->escapeHtml($title) ?></h1>
+
+<?php
+$weather = $form->get('city');
+$weather->setAttribute('class', 'form-control');
+$weather->setAttribute('placeholder', 'Wpisz nazwę miasta');
+
+$submit = $form->get('submit');
+$submit->setAttribute('class', 'btn btn-primary');
+
+$form->setAttribute('action', $this->url('weather', ['action' => 'search']));
+$form->prepare();
+
+echo $this->form()->openTag($form);
+?>
+
+<div class="form-group">
+    <?= $this->formElement($weather) ?>
+    <?= $this->formElementErrors()->render($weather, ['class' => 'help-block']) ?>
+	<?php
+		if($isCity == false) echo '<ul class="help-block"><li>Nie znaleziono miasta o podanej nazwie.</li></ul>';
+	?>
+</div>
+
+<?php
+echo $this->formSubmit($submit);
+echo $this->form()->closeTag();
+
+
+if(!$isWeather)
+{	
+$title = 'Ostatnio wyszukiwana prognoza pogody';
+?>
+<h2><?= $this->escapeHtml($title) ?></h2>
+
+<table class="table">
+<tr>
+    <th>Miasto</th>
+    <th>Zakres</th>
+    <th>&nbsp;</th>
+</tr>
+<?php foreach ($searchs as $element) : ?>
+    <tr>
+        <td><?= $this->escapeHtml($element->city) ?></td>
+        <td><?= $this->escapeHtml($element->from_date) ?></td>
+        <td><?= $this->escapeHtml($element->to_date) ?></td>
+    </tr>
+<?php endforeach; ?>
+</table>
+<?php
+}
+else
+{
+$title = 'Pięciodniowa prognoza pogody dla ';
+?>
+<h2><?= $this->escapeHtml($title.$forecast->location->name.', '.$forecast->location->country) ?></h2>
+
+<div style="overflow:auto;">
+<table class="table-striped table-weather" width="15000px">
+	<tr>
+		<th>Zakres</th> <?php foreach($forecast->forecast->time as $element) : ?> <th><?= 'od '.str_replace('T', ' ', $element['from']).' do '.str_replace('T', ' ', $element['to']) ?></th> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Temperatura</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= round($element->temperature['value'], 1).' '.$element->temperature['unit'] ?></td> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Ciśnienie</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= $element->pressure['value'].' '.$element->pressure['unit'] ?></td> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Wilgotność</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= $element->humidity['value'].' '.$element->humidity['unit'] ?></td> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Prędkość wiatru</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= $element->windSpeed['mps'].'m/s' ?></td> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Kierunek wiatru</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= $element->windDirection['name'] ?></td> <?php endforeach; ?>
+	</tr>
+	<tr>
+		<th>Zachmurzenie</th> <?php foreach($forecast->forecast->time as $element) : ?> <td><?= $element->clouds['all'].$element->clouds['unit'] ?></td> <?php endforeach; ?>
+	</tr>
+</table>
+</div>
+<?php
+}
