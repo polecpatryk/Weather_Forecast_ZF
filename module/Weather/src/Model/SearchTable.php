@@ -25,8 +25,8 @@ class SearchTable
     {
         return	$this->tableGateway->select(function(Select $select){
         $select
-			->order('id DESC')
-            ->limit(5);
+		->order('id DESC')
+        	->limit(5);
     });
     }
 
