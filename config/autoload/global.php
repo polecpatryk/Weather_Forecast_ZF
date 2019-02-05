@@ -14,9 +14,9 @@
 return [
     'db' => [
         'driver' 	=> 'Pdo',
-        'dsn'    	=> 'mysql:dbname=Weather;host=localhost',
-		'username'	=> 'root',
-		'password'	=> '741963456',
+        'dsn'    	=> 'mysql:dbname=dbname;host=localhost',
+		'username'	=> 'user',
+		'password'	=> 'pass',
 		'driver_options' => array(
 			PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
 		),
